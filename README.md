@@ -1,2 +1,0 @@
-codingame-training
-==================
