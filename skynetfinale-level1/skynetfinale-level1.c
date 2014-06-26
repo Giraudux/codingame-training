@@ -13,6 +13,7 @@ struct node;
 
 void start(void);
 void end(void);
+char * _getline(FILE * __stream);
 void add_link(int n0, int n1);
 void add_node_link(int index, int id);
 void remove_link(int n0, int n1);
@@ -38,10 +39,8 @@ const struct node NODE_INIT = {false, 0, NULL};
 
 void start(void)
 {
-    char * line;
-    size_t s_line;
-    ssize_t s_getline;
     int i, n0, n1;
+    char * line;
     
     //#init destructor
     if(atexit(end) != 0)
@@ -52,11 +51,10 @@ void start(void)
     
     //#init n_nodes, n_links, n_gateways and read line
     line = NULL;
-    s_line = 0;
-    s_getline = getline(&line, &s_line, stdin);
-    if(s_getline == -1)
+    line = _getline(stdin);
+    if(line == NULL)
     {
-        fprintf(stderr, "getline: %s\n", strerror(errno));
+        fprintf(stderr, "_getline: NULL pointer\n");
         exit(EXIT_FAILURE);
     }
     n_nodes = 0;
@@ -64,12 +62,11 @@ void start(void)
     n_gateways = 0;
     if(sscanf(line ,"%d %d %d", &n_nodes, &n_links, &n_gateways) != 3)
     {
-        fprintf(stderr, "sscanf: %s\n", strerror(errno));
+        fprintf(stderr, "sscanf: unexpected number of items\n");
         exit(EXIT_FAILURE);
     }
     free(line);
     line = NULL;
-    s_line = 0;
     
     //#init graph
     graph = NULL;
@@ -78,8 +75,6 @@ void start(void)
         fprintf(stderr, "malloc: %s\n", strerror(errno));
         exit(EXIT_FAILURE);
     }
-    
-    //#threading
     for(i=0; i<n_nodes; i++)
     {
         //graph[i] = NODE_INIT;
@@ -91,20 +86,19 @@ void start(void)
     //#init links #threading
     for(i=0; i<n_links; i++)
     {
-        s_getline = getline(&line, &s_line, stdin);
-        if(s_getline == -1)
+        line = _getline(stdin);
+        if(line == NULL)
         {
-            fprintf(stderr, "getline: %s\n", strerror(errno));
+            fprintf(stderr, "_getline: NULL pointer\n");
             exit(EXIT_FAILURE);
         }
         if(sscanf(line ,"%d %d", &n0, &n1) != 2)
         {
-            fprintf(stderr, "sscanf: %s\n", strerror(errno));
+            fprintf(stderr, "sscanf: unexpected number of items\n");
             exit(EXIT_FAILURE);
         }
         free(line);
         line = NULL;
-        s_line = 0;
         
         add_link(n0, n1);
     }
@@ -112,20 +106,20 @@ void start(void)
     //#init gateways #threading
     for(i=0; i<n_gateways; i++)
     {
-        s_getline = getline(&line, &s_line, stdin);
-        if(s_getline == -1)
+        
+        line = _getline(stdin);
+        if(line == NULL)
         {
-            fprintf(stderr, "getline: %s\n", strerror(errno));
+            fprintf(stderr, "_getline: NULL pointer\n");
             exit(EXIT_FAILURE);
         }
         if(sscanf(line ,"%d", &n0) != 1)
         {
-            fprintf(stderr, "sscanf: %s\n", strerror(errno));
+            fprintf(stderr, "sscanf: unexpected number of items\n");
             exit(EXIT_FAILURE);
         }
         free(line);
         line = NULL;
-        s_line = 0;
         
         set_gateway(n0);
     }
@@ -148,6 +142,19 @@ void end(void)
         free(graph);
         graph = NULL;
     }
+}
+
+char * _getline(FILE * __stream)
+{
+	char * __lineptr = NULL;
+	size_t __n = 0;
+	ssize_t __ssize_t = getline(&__lineptr, &__n, __stream);
+	if(__ssize_t < 0)
+	{
+		free(__lineptr);
+		__lineptr = NULL;
+	}
+	return __lineptr;
 }
 
 void add_link(int n0, int n1)
@@ -291,30 +298,26 @@ int main(void)
 {
     int n_pos, n_del;
     char * line;
-    size_t s_line;
-    ssize_t s_getline;
     
     start();
     //print_graph();
     
     line = NULL;
-    s_line = 0;
     while(true)
     {
-        s_getline = getline(&line, &s_line, stdin);
-        if(s_getline == -1)
+        line = _getline(stdin);
+        if(line == NULL)
         {
-            fprintf(stderr, "getline: %s\n", strerror(errno));
+            fprintf(stderr, "_getline: NULL pointer\n");
             exit(EXIT_FAILURE);
         }
         if(sscanf(line ,"%d", &n_pos) != 1)
         {
-            fprintf(stderr, "sscanf: %s\n", strerror(errno));
+            fprintf(stderr, "sscanf:  unexpected number of items\n");
             exit(EXIT_FAILURE);
         }
         free(line);
         line = NULL;
-        s_line = 0;
         
         n_del = next_gateway(n_pos);
         if(n_del == -1)
