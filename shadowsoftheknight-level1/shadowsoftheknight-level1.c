@@ -105,8 +105,8 @@ int main(void)
     char * direction = NULL;
     
     start();
-    x_max = width-1;
-    y_max = height-1;
+    x_max = width;
+    y_max = height;
     
     while(true)
     {
