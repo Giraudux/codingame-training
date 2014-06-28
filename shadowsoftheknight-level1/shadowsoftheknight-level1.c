@@ -118,7 +118,7 @@ int main(void)
             exit(EXIT_FAILURE);
         }
         
-        if(strlen(direction)>0)
+        if(strlen(direction)>1)
         {
             //switch case 0
             switch(direction[0])
@@ -144,7 +144,7 @@ int main(void)
                     return EXIT_FAILURE;
             }
             
-            if(strlen(direction)>1)
+            if(strlen(direction)>2)
             {
                 //switch case 1
                 switch(direction[1])
