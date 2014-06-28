@@ -100,11 +100,13 @@ int main(void)
 {
     int x_min = 0,
         y_min = 0,
-        x_max = width-1,
-        y_max = height-1;
+        x_max = 0,
+        y_max = 0;
     char * direction = NULL;
     
     start();
+    x_max = width-1;
+    y_max = height-1;
     
     while(true)
     {
