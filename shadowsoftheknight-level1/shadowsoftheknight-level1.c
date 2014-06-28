@@ -130,6 +130,7 @@ int main(void)
                 case 'D':
                     y_min = y_bat;
                     y_bat = 1+y_bat+(y_max-y_bat)/2;
+                    if(y_bat == y_max) y_bat--;
                     break;
                 case 'L':
                     x_max = x_bat;
@@ -138,6 +139,7 @@ int main(void)
                 case 'R':
                     x_min = x_bat;
                     x_bat = 1+x_bat+(x_max-x_bat)/2;
+                    if(x_bat == x_max) x_bat--;
                     break;
                 default:
                     fprintf(stderr,"main: unknow direction\n");
@@ -156,6 +158,7 @@ int main(void)
                     case 'D':
                         y_min = y_bat;
                         y_bat = 1+y_bat+(y_max-y_bat)/2;
+                        if(y_bat == y_max) y_bat--;
                         break;
                     case 'L':
                         x_max = x_bat;
@@ -164,6 +167,7 @@ int main(void)
                     case 'R':
                         x_min = x_bat;
                         x_bat = 1+x_bat+(x_max-x_bat)/2;
+                        if(x_bat == x_max) x_bat--;
                         break;
                     default:
                         fprintf(stderr,"main: unknow direction\n");
